@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, VERSION } from '@angular/core';
 
 @Component({
-    templateUrl: './welcome.component.html'
+	templateUrl: './welcome.component.html',
 })
 export class WelcomeComponent {
-    public pageTitle = 'Welcome';
+	public pageTitle = 'Welcome';
+	public get ngVersion(): string {
+		return VERSION.full;
+	}
 }

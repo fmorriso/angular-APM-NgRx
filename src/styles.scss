@@ -1,0 +1,38 @@
+/*
+Bootstrap 4
+https://getbootstrap.com/docs/4.4/getting-started/theming/#importing
+*/
+$enable-flex: true; // Enable Flexbox mode
+$enable-responsive-font-sizes: true;
+$enable-deprecation-messages: true;
+@import "~bootstrap/scss/bootstrap.scss";
+
+$color-current-navigation-link:  #007acc;
+
+li {
+	font-size: large;
+}
+
+div.panel-heading {
+	font-size: x-large;
+}
+
+body {
+	margin-top: 1em;
+}
+
+.nav-link {
+	font-size: large;
+	cursor: pointer;
+}
+
+.navbar-light {
+	.navbar-nav {
+		.nav-item.active {
+			.nav-link {
+				color: $color-current-navigation-link;
+				font-weight: bold;
+			}
+		}
+	}
+}

@@ -5,17 +5,10 @@ import { SharedModule } from '../shared/shared.module';
 
 import { LoginComponent } from './login.component';
 
-const userRoutes: Routes = [
-  { path: 'login', component: LoginComponent }
-];
+const userRoutes: Routes = [{ path: 'login', component: LoginComponent }];
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule.forChild(userRoutes)
-  ],
-  declarations: [
-    LoginComponent
-  ]
+	imports: [SharedModule, RouterModule.forChild(userRoutes)],
+	declarations: [LoginComponent],
 })
-export class UserModule { }
+export class UserModule {}

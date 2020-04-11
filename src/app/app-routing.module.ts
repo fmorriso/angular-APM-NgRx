@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 
 import { AuthGuard } from './user/auth-guard.service';
 
@@ -8,27 +8,27 @@ import { WelcomeComponent } from './home/welcome.component';
 import { PageNotFoundComponent } from './home/page-not-found.component';
 
 const appRoutes: Routes = [
-  {
-    path: '',
-    component: ShellComponent,
-    children: [
-      { path: 'welcome', component: WelcomeComponent },
-      {
-        path: 'products',
-        // canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./products/product.module').then(m => m.ProductModule)
-      },
-      { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-    ]
-  },
-  { path: '**', component: PageNotFoundComponent }
+	{
+		path: '',
+		component: ShellComponent,
+		children: [
+			{ path: 'welcome', component: WelcomeComponent },
+			{
+				path: 'products',
+				// canActivate: [AuthGuard],
+				loadChildren: () =>
+					import('./products/product.module').then((m) => m.ProductModule),
+			},
+			{ path: '', redirectTo: 'welcome', pathMatch: 'full' },
+		],
+	},
+	{ path: '**', component: PageNotFoundComponent },
 ];
 
+const routeOptions: ExtraOptions = {enableTracing: true};
+
 @NgModule({
-  imports: [
-    RouterModule.forRoot(appRoutes)
-  ],
-  exports: [RouterModule]
+	imports: [RouterModule.forRoot(appRoutes, routeOptions)],
+	exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
