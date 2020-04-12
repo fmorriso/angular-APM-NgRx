@@ -1,4 +1,4 @@
-import { ProductState } from './product-state';
+import { ProductState } from './product.state';
 
 const initialState: ProductState = {
 	showProductCode: true,
