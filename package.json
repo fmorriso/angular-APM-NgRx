@@ -7,7 +7,7 @@
     "start": "ng serve --configuration=development --open",
     "start-prod": "ng serve --configuration=production --open",
     "build": "ng build --configuration=development",
-    "build-prod": "ng build --configuration=development",
+    "build-prod": "ng build --configuration=production",
     "test": "ng test",
     "lint": "ng lint --project --format stylish",
     "e2e": "ng e2e"
