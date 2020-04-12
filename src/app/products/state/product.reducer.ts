@@ -1,6 +1,12 @@
 import { ProductState } from './product-state';
 
-export function reducer(state: ProductState, action): ProductState {
+const initialState: ProductState = {
+	showProductCode: true,
+	currentProduct: null,
+	products: [],
+};
+
+export function reducer(state = initialState, action): ProductState {
 	switch (action.type) {
 		//
 		case 'TOGGLE_PRODUCT_CODE':
@@ -8,7 +14,7 @@ export function reducer(state: ProductState, action): ProductState {
 			// console.log('payload: ' + JSON.stringify(action.payload));
 			return {
 				...state,
-				showProductCode: action.payload
+				showProductCode: action.payload,
 			};
 		//
 		default:
