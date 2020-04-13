@@ -1,4 +1,5 @@
 import * as fromRoot from '../../state/app.state';
+
 export interface State extends fromRoot.State {
 	products: ProductState;
 }
