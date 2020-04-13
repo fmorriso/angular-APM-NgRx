@@ -1,4 +1,4 @@
-//
+// Product reducers
 import { initialState, ProductState } from './product.state';
 
 export function reducer(state = initialState, action): ProductState {

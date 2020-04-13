@@ -7,7 +7,7 @@ import { ProductService } from '../product.service';
 //
 import { Store, select } from '@ngrx/store';
 import * as fromProductState from '../state/product.state';
-import * as fromProductSelector from '../state/product.selector';
+import * as fromProductSelector from '../state/product.selectors';
 
 @Component({
 	selector: 'pm-product-list',

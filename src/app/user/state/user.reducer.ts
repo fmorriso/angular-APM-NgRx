@@ -1,3 +1,4 @@
+// User reducer
 import { initialState, UserState } from './user.state';
 
 export function reducer(state = initialState, action): UserState {
