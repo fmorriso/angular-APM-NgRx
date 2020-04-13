@@ -1,12 +1,19 @@
-import * as fromRoot from '../../state/app.state';
+import * as fromRootState from '../../state/app.state';
 
-export interface State extends fromRoot.State {
+export interface State extends fromRootState.State {
 	products: ProductState;
 }
 
 import { Product } from '../product';
 export interface ProductState {
 	showProductCode: boolean;
-	currentProduct: Product;
+	currentProductId: number | null;
+	// currentProduct: Product;
 	products: Product[];
 }
+
+export const initialState: ProductState = {
+	showProductCode: true,
+	currentProductId: null,
+	products: [],
+};

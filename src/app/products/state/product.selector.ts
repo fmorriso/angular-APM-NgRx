@@ -8,10 +8,18 @@ export const getShowProductCode = createSelector(
 	(state) => state.showProductCode
 );
 
+// currentProductId
+export const getCurrentProductId = createSelector(
+	getProductFeatureState,
+	(state) => state.currentProductId
+);
+
 // currentProduct
 export const getCurrentProduct = createSelector(
 	getProductFeatureState,
-	(state) => state.currentProduct
+	getCurrentProductId,
+	(state, currentProductId) =>
+		state.products.find((p) => p.id === currentProductId)
 );
 
 // products

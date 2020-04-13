@@ -4,8 +4,10 @@ import { Subscription } from 'rxjs';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
+//
 import { Store, select } from '@ngrx/store';
-import * as fromProduct from '../state/product.state';
+import * as fromProductState from '../state/product.state';
+import * as fromProductSelector from '../state/product.selector';
 
 @Component({
 	selector: 'pm-product-list',
@@ -25,7 +27,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 	sub: Subscription;
 
 	constructor(
-		private store: Store<fromProduct.State>,
+		private store: Store<fromProductState.State>,
 		private productService: ProductService
 	) {}
 
@@ -42,11 +44,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
 		// subscribe to any changes to the 'products' portion/slice of the NgRx state
 		// TODO: Unsubscribe
 		this.store
-			.pipe(select('products'))
+			.pipe(select(fromProductSelector.getShowProductCode))
 			//
 			.subscribe(
 				//
-				(products) => (this.displayCode = products.showProductCode)
+				(showProductCode) => (this.displayCode = showProductCode)
 			);
 	}
 

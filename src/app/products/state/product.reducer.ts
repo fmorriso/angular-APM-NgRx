@@ -1,11 +1,5 @@
 //
-import { ProductState } from './product.state';
-
-const initialState: ProductState = {
-	showProductCode: true,
-	currentProduct: null,
-	products: [],
-};
+import { initialState, ProductState } from './product.state';
 
 export function reducer(state = initialState, action): ProductState {
 	switch (action.type) {
