@@ -7,6 +7,8 @@ import { Store, select } from '@ngrx/store';
 import * as fromProductState from '../state/product.state';
 import * as productSelectors from '../state/product.selectors';
 import * as productActions from '../state/product.actions';
+import { takeWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'pm-product-list',
@@ -20,9 +22,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
 	displayCode: boolean;
 
 	products: Product[];
+	componentActive = true;
 
 	// Used to highlight the selected product in the list
 	selectedProduct: Product | null;
+	products$: Observable<Product[]>;
 
 	constructor(private store: Store<fromProductState.State>, private productService: ProductService) {}
 
@@ -37,10 +41,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 		// get the array of all available products
 		this.store.dispatch(new productActions.Load());
-		this.store
-			.pipe(select(productSelectors.getProducts))
-			//
-			.subscribe((products: Product[]) => (this.products = products));
+		this.products$ = this.store
+			.pipe(
+				select(productSelectors.getProducts)
+			);
 		/*
 		this.productService.getProducts().subscribe({
 			next: (products: Product[]) => (this.products = products),
@@ -51,7 +55,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 		// subscribe to any changes to the 'products' portion/slice of the NgRx state
 		// TODO: Unsubscribe
 		this.store
-			.pipe(select(productSelectors.getShowProductCode))
+			.pipe(
+				//
+				select(productSelectors.getShowProductCode)
+			)
 			//
 			.subscribe(
 				//
@@ -59,7 +66,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
 			);
 	}
 
-	ngOnDestroy(): void {}
+	ngOnDestroy(): void {
+		this.componentActive = false;
+	}
 
 	checkChanged(value: boolean): void {
 		this.store.dispatch(new productActions.ToggleProductCode(value));
