@@ -41,13 +41,16 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
 			return {
 				...state,
 				products: action.payload,
+				error: '',
 			};
 
 		case ProductActionTypes.LoadFail:
 			return {
 				...state,
 				products: [],
+				error: action.payload,
 			};
+
 		default:
 			return state;
 	}

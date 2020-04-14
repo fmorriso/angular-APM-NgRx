@@ -6,6 +6,7 @@ import { ProductService } from '../product.service';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
 
+import { takeWhile } from 'rxjs/operators';
 // NgRx
 import { Store, select } from '@ngrx/store';
 import * as fromProductState from '../state/product.state';
@@ -20,6 +21,7 @@ import * as productActions from '../state/product.actions';
 export class ProductEditComponent implements OnInit, OnDestroy {
 	pageTitle = 'Product Edit';
 	errorMessage = '';
+	componentActive = true;
 	productForm: FormGroup;
 
 	product: Product | null;
@@ -60,11 +62,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		this.productForm = this.fb.group({
 			productName: [
 				'',
-				[
-					Validators.required,
-					Validators.minLength(3),
-					Validators.maxLength(50),
-				],
+				[Validators.required, Validators.minLength(3), Validators.maxLength(50)],
 			],
 			productCode: ['', Validators.required],
 			starRating: ['', NumberValidators.range(1, 5)],
@@ -72,9 +70,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		});
 
 		// Watch for changes to the currently selected product
-		// TODO: Unsubscribe
 		this.store
-			.pipe(select(productSelectors.getCurrentProduct))
+			.pipe(
+				select(productSelectors.getCurrentProduct),
+				takeWhile(() => this.componentActive)
+			)
 			.subscribe((currentProduct) => this.displayProduct(currentProduct));
 
 		// Watch for value changes
@@ -86,14 +86,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	ngOnDestroy(): void {}
+	ngOnDestroy(): void {
+		this.componentActive = false;
+	}
 
 	// Also validate on blur
 	// Helpful if the user tabs through required fields
 	blur(): void {
-		this.displayMessage = this.genericValidator.processMessages(
-			this.productForm
-		);
+		this.displayMessage = this.genericValidator.processMessages(this.productForm);
 	}
 
 	displayProduct(product: Product | null): void {
@@ -131,8 +131,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		if (this.product && this.product.id) {
 			if (confirm(`Really delete the product: ${this.product.productName}?`)) {
 				this.productService.deleteProduct(this.product.id).subscribe({
-					next: () =>
-						this.store.dispatch(new productActions.ClearCurrentProduct()),
+					next: () => this.store.dispatch(new productActions.ClearCurrentProduct()),
 					error: (err) => (this.errorMessage = err.error),
 				});
 			}
@@ -153,9 +152,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 				if (p.id === 0) {
 					this.productService.createProduct(p).subscribe({
 						next: (product) =>
-							this.store.dispatch(
-								new productActions.SetCurrentProduct(product)
-							),
+							this.store.dispatch(new productActions.SetCurrentProduct(product)),
 						error: (err) => (this.errorMessage = err.error),
 					});
 				} else {
