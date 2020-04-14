@@ -17,30 +17,30 @@ export class LoginComponent implements OnInit {
 
 	maskUserName: boolean;
 
-  constructor(private store: Store<any>,
-              private authService: AuthService,
-              private router: Router) {
-  }
+	constructor(
+		private store: Store<any>,
+		private authService: AuthService,
+		private router: Router
+	) {}
 
-  ngOnInit(): void {
-    // TODO: Unsubscribe
-    this.store.pipe(select('users')).subscribe(
-      users => {
-        if (users) {
-          this.maskUserName = users.maskUserName;
-        }
-      });
-  }
+	ngOnInit(): void {
+		// TODO: Unsubscribe
+		this.store.pipe(select('users')).subscribe((users) => {
+			if (users) {
+				this.maskUserName = users.maskUserName;
+			}
+		});
+	}
 
 	cancel(): void {
 		this.router.navigate(['welcome']);
 	}
 
 	checkChanged(value: boolean): void {
-    this.store.dispatch({
-      type: 'MASK_USER_NAME',
-      payload: value
-    });
+		this.store.dispatch({
+			type: 'MASK_USER_NAME',
+			payload: value,
+		});
 	}
 
 	login(loginForm: NgForm): void {
