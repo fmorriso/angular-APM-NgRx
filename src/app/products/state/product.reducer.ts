@@ -2,10 +2,7 @@
 import { initialState, ProductState } from './product.state';
 import { ProductActions, ProductActionTypes } from './product.actions';
 
-export function reducer(
-	state = initialState,
-	action: ProductActions
-): ProductState {
+export function reducer(state = initialState, action: ProductActions): ProductState {
 	switch (action.type) {
 		//
 		case ProductActionTypes.ToggleProductCode:
@@ -40,6 +37,17 @@ export function reducer(
 				},
 			};
 
+		case ProductActionTypes.LoadSuccess:
+			return {
+				...state,
+				products: action.payload,
+			};
+
+		case ProductActionTypes.LoadFail:
+			return {
+				...state,
+				products: [],
+			};
 		default:
 			return state;
 	}

@@ -24,10 +24,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 	// Used to highlight the selected product in the list
 	selectedProduct: Product | null;
 
-	constructor(
-		private store: Store<fromProductState.State>,
-		private productService: ProductService
-	) {}
+	constructor(private store: Store<fromProductState.State>, private productService: ProductService) {}
 
 	ngOnInit(): void {
 		// listen for Action that changes current Product
@@ -38,10 +35,18 @@ export class ProductListComponent implements OnInit, OnDestroy {
 			//
 			.subscribe((currentProduct) => (this.selectedProduct = currentProduct));
 
+		// get the array of all available products
+		this.store.dispatch(new productActions.Load());
+		this.store
+			.pipe(select(productSelectors.getProducts))
+			//
+			.subscribe((products: Product[]) => (this.products = products));
+		/*
 		this.productService.getProducts().subscribe({
 			next: (products: Product[]) => (this.products = products),
 			error: (err: any) => (this.errorMessage = err.error),
 		});
+    */
 
 		// subscribe to any changes to the 'products' portion/slice of the NgRx state
 		// TODO: Unsubscribe
@@ -61,12 +66,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 	}
 
 	newProduct(): void {
-		// this.productService.changeSelectedProduct(this.productService.newProduct());
 		this.store.dispatch(new productActions.InitializeCurrentProduct());
 	}
 
 	productSelected(product: Product): void {
-		// this.productService.changeSelectedProduct(product);
 		this.store.dispatch(new productActions.SetCurrentProduct(product));
 	}
 }
