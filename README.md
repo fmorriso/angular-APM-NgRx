@@ -1,6 +1,6 @@
-# APM-Demo during Module 7
+# APM-Demo3 during Module 8 - Working With Effects
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.2.
+Completed files after the _*Working with Effects*_ module. It adds an effect to retrieve data via http. NOTE: Once we move the data retrieval to actions and the store, the create, update, and delete operations no longer work. These features are implemented with the store in the next demo.
 
 ## Development server
 
