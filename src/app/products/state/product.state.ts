@@ -1,3 +1,4 @@
+// Product state
 import * as fromRootState from '../../state/app.state';
 
 export interface State extends fromRootState.State {

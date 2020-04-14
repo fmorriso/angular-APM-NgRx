@@ -1,4 +1,4 @@
-// State for this feature (User)
+// User state
 import { User } from '../user';
 
 export interface UserState {
