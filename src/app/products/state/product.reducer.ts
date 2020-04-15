@@ -81,6 +81,24 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
 				error: action.payload,
 			};
 
+		// After a delete, the currentProduct is null.
+		// NOTE: action.payload is the Id number of the product just deleted
+		//       which we use to build a new Product[] array with every Product EXCEPT the one we just deleted.
+		case ProductActionTypes.DeleteProductSuccess:
+			return {
+				...state,
+				products: state.products.filter((product) => product.id !== action.payload),
+				currentProductId: null,
+				error: '',
+			};
+
+		// NOTE: action.payload will have the error message
+		case ProductActionTypes.DeleteProductFail:
+			return {
+				...state,
+				error: action.payload,
+			};
+
 		default:
 			return state;
 	}
