@@ -1,19 +1,21 @@
 // Product state
+import { Product } from '../product';
 import * as fromRootState from '../../state/app.state';
 
 export interface State extends fromRootState.State {
 	products: ProductState;
 }
 
-import { Product } from '../product';
 export interface ProductState {
 	showProductCode: boolean;
-	currentProduct: Product;
+	currentProductId: number | null; // NOTE: need to allow null because there is no default current product Id
 	products: Product[];
+	error: string;
 }
 
 export const initialState: ProductState = {
 	showProductCode: true,
-	currentProduct: null,
+	currentProductId: null,
 	products: [],
+	error: '',
 };

@@ -4,9 +4,12 @@ import { Product } from '../product';
 import { ProductService } from '../product.service';
 // NgRx
 import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+//
 import * as fromProductState from '../state/product.state';
 import * as productSelectors from '../state/product.selectors';
 import * as productActions from '../state/product.actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
 	selector: 'pm-product-list',
@@ -16,57 +19,59 @@ import * as productActions from '../state/product.actions';
 export class ProductListComponent implements OnInit, OnDestroy {
 	pageTitle = 'Products';
 	errorMessage: string;
-
+	errorMessage$: Observable<string>;
+	componentActive = true;
 	displayCode: boolean;
 
-	products: Product[];
+	products$: Observable<Product[]>;
 
 	// Used to highlight the selected product in the list
 	selectedProduct: Product | null;
 
-	constructor(
-		private store: Store<fromProductState.State>,
-		private productService: ProductService
-	) {}
+	constructor(private store: Store<fromProductState.State>) {}
 
 	ngOnInit(): void {
-		// listen for Action that changes current Product
-		// TODO: Unsubscribe
+		// Do NOT subscribe here because it uses an async pipe
+		// This gets the initial values until the load is complete.
+		this.products$ = this.store.pipe(
+			select(productSelectors.getProducts)
+		) as Observable<Product[]>;
+
+		// Do NOT subscribe here because it used an async pipe
+		this.errorMessage$ = this.store.pipe(select(productSelectors.getError));
+
+		this.store.dispatch(new productActions.Load());
+
+		// Subscribe here because it does not use an async pipe
 		this.store
-			//
-			.pipe(select(productSelectors.getCurrentProduct))
-			//
+			.pipe(
+				select(productSelectors.getCurrentProduct),
+				takeWhile(() => this.componentActive)
+			)
 			.subscribe((currentProduct) => (this.selectedProduct = currentProduct));
 
-		this.productService.getProducts().subscribe({
-			next: (products: Product[]) => (this.products = products),
-			error: (err: any) => (this.errorMessage = err.error),
-		});
-
-		// subscribe to any changes to the 'products' portion/slice of the NgRx state
-		// TODO: Unsubscribe
+		// Subscribe here because it does not use an async pipe
 		this.store
-			.pipe(select(productSelectors.getShowProductCode))
-			//
-			.subscribe(
-				//
-				(showProductCode) => (this.displayCode = showProductCode)
-			);
+			.pipe(
+				select(productSelectors.getShowProductCode),
+				takeWhile(() => this.componentActive)
+			)
+			.subscribe((showProductCode) => (this.displayCode = showProductCode));
 	}
 
-	ngOnDestroy(): void {}
+	ngOnDestroy(): void {
+		this.componentActive = false;
+	}
 
 	checkChanged(value: boolean): void {
 		this.store.dispatch(new productActions.ToggleProductCode(value));
 	}
 
 	newProduct(): void {
-		// this.productService.changeSelectedProduct(this.productService.newProduct());
 		this.store.dispatch(new productActions.InitializeCurrentProduct());
 	}
 
 	productSelected(product: Product): void {
-		// this.productService.changeSelectedProduct(product);
 		this.store.dispatch(new productActions.SetCurrentProduct(product));
 	}
 }

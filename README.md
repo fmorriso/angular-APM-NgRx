@@ -1,6 +1,6 @@
-# APM-Demo during Module 7
+# APM-Demo4 during Module 9 - Performing Update Operations
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.2.
+Completed files after the _*Performing Update Operations*_ module.
 
 ## Development server
 

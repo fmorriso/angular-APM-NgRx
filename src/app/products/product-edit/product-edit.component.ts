@@ -1,16 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+//
 import { Product } from '../product';
 import { ProductService } from '../product.service';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
-
+// RxJs
+import { takeWhile } from 'rxjs/operators';
 // NgRx
 import { Store, select } from '@ngrx/store';
 import * as fromProductState from '../state/product.state';
 import * as productSelectors from '../state/product.selectors';
 import * as productActions from '../state/product.actions';
+import { Observable, of } from 'rxjs';
 
 @Component({
 	selector: 'pm-product-edit',
@@ -19,7 +21,8 @@ import * as productActions from '../state/product.actions';
 })
 export class ProductEditComponent implements OnInit, OnDestroy {
 	pageTitle = 'Product Edit';
-	errorMessage = '';
+	errorMessage$: Observable<string>;
+	componentActive = true;
 	productForm: FormGroup;
 
 	product: Product | null;
@@ -60,11 +63,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		this.productForm = this.fb.group({
 			productName: [
 				'',
-				[
-					Validators.required,
-					Validators.minLength(3),
-					Validators.maxLength(50),
-				],
+				[Validators.required, Validators.minLength(3), Validators.maxLength(50)],
 			],
 			productCode: ['', Validators.required],
 			starRating: ['', NumberValidators.range(1, 5)],
@@ -72,10 +71,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		});
 
 		// Watch for changes to the currently selected product
-		// TODO: Unsubscribe
 		this.store
-			.pipe(select(productSelectors.getCurrentProduct))
+			.pipe(
+				select(productSelectors.getCurrentProduct),
+				takeWhile(() => this.componentActive)
+			)
 			.subscribe((currentProduct) => this.displayProduct(currentProduct));
+
+		// Watch for changes to the error message
+		this.errorMessage$ = this.store.pipe(select(productSelectors.getError));
 
 		// Watch for value changes
 		this.productForm.valueChanges.subscribe(
@@ -86,14 +90,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	ngOnDestroy(): void {}
+	ngOnDestroy(): void {
+		this.componentActive = false;
+	}
 
 	// Also validate on blur
 	// Helpful if the user tabs through required fields
 	blur(): void {
-		this.displayMessage = this.genericValidator.processMessages(
-			this.productForm
-		);
+		this.displayMessage = this.genericValidator.processMessages(this.productForm);
 	}
 
 	displayProduct(product: Product | null): void {
@@ -130,11 +134,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	deleteProduct(): void {
 		if (this.product && this.product.id) {
 			if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-				this.productService.deleteProduct(this.product.id).subscribe({
-					next: () =>
-						this.store.dispatch(new productActions.ClearCurrentProduct()),
-					error: (err) => (this.errorMessage = err.error),
-				});
+				this.store.dispatch(new productActions.DeleteProduct(this.product.id));
 			}
 		} else {
 			// No need to delete, it was never saved
@@ -151,22 +151,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 				const p = { ...this.product, ...this.productForm.value };
 
 				if (p.id === 0) {
-					this.productService.createProduct(p).subscribe({
-						next: (product) =>
-							this.store.dispatch(
-								new productActions.SetCurrentProduct(product)
-							),
-						error: (err) => (this.errorMessage = err.error),
-					});
+					this.store.dispatch(new productActions.CreateProduct(p));
 				} else {
-					this.productService.updateProduct(p).subscribe({
-						next: (product) => new productActions.SetCurrentProduct(product),
-						error: (err) => (this.errorMessage = err.error),
-					});
+					this.store.dispatch(new productActions.UpdateProduct(p));
 				}
 			}
 		} else {
-			this.errorMessage = 'Please correct the validation errors.';
+			this.errorMessage$ = of('Please correct the validation errors.');
 		}
 	}
 }
