@@ -1,6 +1,7 @@
 // Product reducers
 import { initialState, ProductState } from './product.state';
 import { ProductActions, ProductActionTypes } from './product.actions';
+import { Product } from '../product';
 
 export function reducer(state = initialState, action: ProductActions): ProductState {
 	switch (action.type) {
@@ -43,6 +44,26 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
 				...state,
 				products: [],
 				error: action.payload,
+			};
+
+		case ProductActionTypes.UpdateProductSuccess:
+			// build a new Product[] via the .map() operator.
+			// For each Product, use either the updated product (action.payload) or the unchanged existing product (item)
+			const updatedProducts = state.products.map((item: Product) =>
+				action.payload.id === item.id ? action.payload : item
+			);
+			// replace the state with all the old state plus the updated set of products and the current product Id
+			return {
+				...state,
+				products: updatedProducts,
+				currentProductId: action.payload.id,
+				error: '',
+			};
+
+		case ProductActionTypes.UpdateProductFail:
+			return {
+				...state,
+				error: action.payload, // NOTE: the payload is a string containing the error message
 			};
 
 		default:
