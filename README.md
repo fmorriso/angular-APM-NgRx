@@ -1,6 +1,6 @@
-# APM-Demo3 during Module 8 - Working With Effects
+# APM-Demo4 during Module 9 - Performing Update Operations
 
-Completed files after the _*Working with Effects*_ module. It adds an effect to retrieve data via http. NOTE: Once we move the data retrieval to actions and the store, the create, update, and delete operations no longer work. These features are implemented with the store in the next demo.
+Completed files after the _*Performing Update Operations*_ module.
 
 ## Development server
 
