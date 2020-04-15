@@ -66,6 +66,21 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
 				error: action.payload, // NOTE: the payload is a string containing the error message
 			};
 
+		// After a create, the currentProduct is the new product.
+		case ProductActionTypes.CreateProductSuccess:
+			return {
+				...state,
+				products: [...state.products, action.payload],
+				currentProductId: action.payload.id,
+				error: '',
+			};
+
+		case ProductActionTypes.CreateProductFail:
+			return {
+				...state,
+				error: action.payload,
+			};
+
 		default:
 			return state;
 	}

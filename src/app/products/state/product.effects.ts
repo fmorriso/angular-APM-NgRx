@@ -41,13 +41,30 @@ export class ProductEffects {
 			mergeMap((product: Product) =>
 				this.productService
 					.updateProduct(product)
-					// Dispatch Success of Fail actions depending on what happened in the Product Service
+					//
 					.pipe(
 						map(
 							(updatedProduct) =>
 								new productActions.UpdateProductSuccess(updatedProduct)
 						),
 						catchError((err) => of(new productActions.UpdateProductFail(err)))
+					)
+			)
+		);
+
+	@Effect()
+	createProduct$: Observable<Action> = this.actions$
+		//
+		.pipe(
+			ofType(productActions.ProductActionTypes.CreateProduct),
+			map((action: productActions.CreateProduct) => action.payload), // NOTE: action.payload is a Product instance
+			mergeMap((product: Product) =>
+				this.productService
+					.createProduct(product)
+					//
+					.pipe(
+						map((newProduct) => new productActions.CreateProductSuccess(newProduct)),
+						catchError((err) => of(new productActions.CreateProductFail(err)))
 					)
 			)
 		);
