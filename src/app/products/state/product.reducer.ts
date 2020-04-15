@@ -16,25 +16,19 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
 		case ProductActionTypes.SetCurrentProduct:
 			return {
 				...state,
-				currentProduct: { ...action.payload },
+				currentProductId: action.payload.id,
 			};
 
 		case ProductActionTypes.ClearCurrentProduct:
 			return {
 				...state,
-				currentProduct: null,
+				currentProductId: null,
 			};
 
 		case ProductActionTypes.InitializeCurrentProduct:
 			return {
 				...state,
-				currentProduct: {
-					id: 0,
-					productName: '',
-					productCode: 'New',
-					description: '',
-					starRating: 0,
-				},
+				currentProductId: 0,
 			};
 
 		case ProductActionTypes.LoadSuccess:
