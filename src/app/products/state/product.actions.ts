@@ -1,8 +1,8 @@
 // Product actions
+import { Product } from '../product';
 
 /* NgRx */
 import { Action } from '@ngrx/store';
-import { Product } from '../product';
 
 export enum ProductActionTypes {
 	ToggleProductCode = '[Product] Toggle Product Code',

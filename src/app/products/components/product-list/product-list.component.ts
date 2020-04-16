@@ -23,10 +23,13 @@ export class ProductListComponent {
 	}
 
 	newProduct(): void {
+		console.log('made it newProduct method in product-list.component.ts');
 		this.initializeNewProduct.emit();
 	}
 
 	productSelected(product: Product): void {
+		console.log('made it productSelected method in product-list.component.ts');
+		console.log(JSON.stringify(product));
 		this.selected.emit(product);
 	}
 }

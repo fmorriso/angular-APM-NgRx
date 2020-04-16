@@ -1,12 +1,12 @@
 // Index.ts "Barrell"
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as fromRoot from '../../state/app.state';
 import { ProductState } from './product.state';
-import * as fromRootState from '../../state/app.state';
 
 // Extends the app state to include the product feature.
 // This is required because products are lazy loaded.
 // So the reference to ProductState cannot be added to app.state.ts directly.
-export interface State extends fromRootState.State {
+export interface State extends fromRoot.State {
 	products: ProductState;
 }
 

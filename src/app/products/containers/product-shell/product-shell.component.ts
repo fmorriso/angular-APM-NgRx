@@ -1,36 +1,29 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
-import { Product } from '../../product';
-// RxJs
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-// NgRx
-import { select, Store } from '@ngrx/store';
-//
-import * as productSelectors from '../../state';
-import * as productActions from '../../state/product.actions';
-import { State } from '../../state'; // index.ts
+
+import * as fromProduct from './../../state';
+import * as productActions from './../../state/product.actions';
+import { Product } from '../../product';
 
 @Component({
 	templateUrl: './product-shell.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductShellComponent implements OnInit {
-	errorMessage$: Observable<string>;
 	displayCode$: Observable<boolean>;
-	products$: Observable<Product[]>;
 	selectedProduct$: Observable<Product>;
+	products$: Observable<Product[]>;
+	errorMessage$: Observable<string>;
 
-	constructor(private store: Store<State>) {}
+	constructor(private store: Store<fromProduct.State>) {}
 
 	ngOnInit(): void {
 		this.store.dispatch(new productActions.Load());
-		//
-		this.products$ = this.store.pipe(select(productSelectors.getProducts));
-		this.errorMessage$ = this.store.pipe(select(productSelectors.getError));
-		this.selectedProduct$ = this.store.pipe(
-			select(productSelectors.getCurrentProduct)
-		);
-		this.displayCode$ = this.store.pipe(select(productSelectors.getShowProductCode));
+		this.products$ = this.store.pipe(select(fromProduct.getProducts));
+		this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
+		this.selectedProduct$ = this.store.pipe(select(fromProduct.getCurrentProduct));
+		this.displayCode$ = this.store.pipe(select(fromProduct.getShowProductCode));
 	}
 
 	checkChanged(value: boolean): void {
@@ -44,8 +37,6 @@ export class ProductShellComponent implements OnInit {
 	productSelected(product: Product): void {
 		this.store.dispatch(new productActions.SetCurrentProduct(product));
 	}
-
-	//
 
 	deleteProduct(product: Product): void {
 		this.store.dispatch(new productActions.DeleteProduct(product.id));
