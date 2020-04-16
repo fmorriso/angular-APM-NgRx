@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Product } from '../product';
-import { ProductService } from '../product.service';
+import { Product } from '../../product';
+import { ProductService } from '../../product.service';
 // NgRx
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 //
-import * as fromProductState from '../state/product.state';
-import * as productSelectors from '../state/product.selectors';
-import * as productActions from '../state/product.actions';
+import * as fromProductState from '../../state/product.state';
+import * as productSelectors from '../../state/product.selectors';
+import * as productActions from '../../state/product.actions';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
