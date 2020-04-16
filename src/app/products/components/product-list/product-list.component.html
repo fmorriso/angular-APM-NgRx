@@ -3,7 +3,7 @@
 		{{ pageTitle }}
 	</div>
 
-	<div class="card-body" *ngIf="products$ | async as products">
+	<div class="card-body" *ngIf="products">
 		<div class="list-group">
 			<ng-template ngFor let-product="$implicit" [ngForOf]="products">
 				<button
@@ -41,6 +41,6 @@
 		</div>
 	</div>
 </div>
-<div *ngIf="errorMessage$ | async as errorMessage" class="alert alert-danger">
+<div *ngIf="errorMessage" class="alert alert-danger">
 	Error: {{ errorMessage }}
 </div>

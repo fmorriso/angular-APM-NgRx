@@ -1,18 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-//
-import { Product } from '../product';
-import { ProductService } from '../product.service';
-import { GenericValidator } from '../../shared/generic-validator';
-import { NumberValidators } from '../../shared/number.validator';
 // RxJs
+import { Observable, of } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 // NgRx
 import { Store, select } from '@ngrx/store';
-import * as fromProductState from '../state/product.state';
-import * as productSelectors from '../state/product.selectors';
+import * as productSelectors from '../state';
 import * as productActions from '../state/product.actions';
-import { Observable, of } from 'rxjs';
+// application
+import { State } from '../state'; // index.ts
+import { Product } from '../product';
+import { GenericValidator } from '../../shared/generic-validator';
+import { NumberValidators } from '../../shared/number.validator';
 
 @Component({
 	selector: 'pm-product-edit',
@@ -32,11 +31,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	private validationMessages: { [key: string]: { [key: string]: string } };
 	private genericValidator: GenericValidator;
 
-	constructor(
-		private store: Store<fromProductState.State>,
-		private fb: FormBuilder,
-		private productService: ProductService
-	) {
+	constructor(private store: Store<State>, private fb: FormBuilder) {
 		// Defines all of the validation messages for the form.
 		// These could instead be retrieved from a file or database.
 		this.validationMessages = {
