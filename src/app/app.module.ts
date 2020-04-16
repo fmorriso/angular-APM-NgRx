@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 // Imports for loading & configuring the in-memory web api
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { ProductData } from './products/product-data';
+import { ProductData } from './products/product.data';
 //
 import { AppRoutingModule } from './app-routing.module';
 //
@@ -38,7 +38,13 @@ import { EffectsModule } from '@ngrx/effects';
 			logOnly: environment.production,
 		}),
 	],
-	declarations: [AppComponent, ShellComponent, MenuComponent, WelcomeComponent, PageNotFoundComponent],
+	declarations: [
+		AppComponent,
+		ShellComponent,
+		MenuComponent,
+		WelcomeComponent,
+		PageNotFoundComponent,
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

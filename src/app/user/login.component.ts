@@ -1,18 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-//
+
 import { AuthService } from './auth.service';
 
 import { takeWhile } from 'rxjs/operators';
+
 /* NgRx */
 import { Store, select } from '@ngrx/store';
-//
-import * as fromUser from './state/user.reducer';
+import * as fromUser from './state';
 import * as userActions from './state/user.actions';
 import * as fromRoot from '../state/app.state';
-import * as fromUserState from '../user/state/user.state';
-import * as userSelectors from '../user/state/user.selectors';
 
 @Component({
 	templateUrl: './login.component.html',
@@ -34,7 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.store
 			.pipe(
-				select(userSelectors.getMaskUserName),
+				select(fromUser.getMaskUserName),
 				takeWhile(() => this.componentActive)
 			)
 			.subscribe((maskUserName) => (this.maskUserName = maskUserName));

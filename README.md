@@ -1,6 +1,6 @@
-# APM-Demo4 during Module 9 - Performing Update Operations
+# APM-Demo(?) during Module 10 - Architectural Considerations
 
-Completed files after the _*Performing Update Operations*_ module.
+Completed files after the _*Architectural Considerations*_ module.
 
 ## Development server
 
