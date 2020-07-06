@@ -10,11 +10,11 @@ import { ProductEditComponent } from './product-edit/product-edit.component';
 const productRoutes: Routes = [{ path: '', component: ProductShellComponent }];
 
 @NgModule({
-	imports: [SharedModule, RouterModule.forChild(productRoutes)],
-	declarations: [
-		ProductShellComponent,
-		ProductListComponent,
-		ProductEditComponent,
-	],
+  imports: [SharedModule, RouterModule.forChild(productRoutes)],
+  declarations: [
+    ProductShellComponent,
+    ProductListComponent,
+    ProductEditComponent,
+  ],
 })
 export class ProductModule {}

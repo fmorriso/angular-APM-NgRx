@@ -6,48 +6,47 @@ import { Product } from '../product';
 import { ProductService } from '../product.service';
 
 @Component({
-	selector: 'pm-product-list',
-	templateUrl: './product-list.component.html',
-	styleUrls: ['./product-list.component.scss'],
+  selector: 'pm-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-	pageTitle = 'Products';
-	errorMessage: string;
+  pageTitle = 'Products';
+  errorMessage: string;
 
-	displayCode: boolean;
+  displayCode: boolean;
 
-	products: Product[];
+  products: Product[];
 
-	// Used to highlight the selected product in the list
-	selectedProduct: Product | null;
-	sub: Subscription;
+  // Used to highlight the selected product in the list
+  selectedProduct: Product | null;
+  sub: Subscription;
 
-	constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) { }
 
-	ngOnInit(): void {
-		this.sub = this.productService.selectedProductChanges$.subscribe(
-			(selectedProduct) => (this.selectedProduct = selectedProduct)
-		);
+  ngOnInit(): void {
+    this.sub = this.productService.selectedProductChanges$.subscribe(selectedProduct => (this.selectedProduct = selectedProduct)
+    );
 
-		this.productService.getProducts().subscribe({
-			next: (products: Product[]) => (this.products = products),
-			error: (err: any) => (this.errorMessage = err.error),
-		});
-	}
+    this.productService.getProducts().subscribe({
+      next: (products: Product[]) => (this.products = products),
+      error: (err: any) => (this.errorMessage = err.error),
+    });
+  }
 
-	ngOnDestroy(): void {
-		this.sub.unsubscribe();
-	}
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
 
-	checkChanged(value: boolean): void {
-		this.displayCode = value;
-	}
+  checkChanged(value: boolean): void {
+    this.displayCode = value;
+  }
 
-	newProduct(): void {
-		this.productService.changeSelectedProduct(this.productService.newProduct());
-	}
+  newProduct(): void {
+    this.productService.changeSelectedProduct(this.productService.newProduct());
+  }
 
-	productSelected(product: Product): void {
-		this.productService.changeSelectedProduct(product);
-	}
+  productSelected(product: Product): void {
+    this.productService.changeSelectedProduct(product);
+  }
 }
