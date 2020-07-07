@@ -25,7 +25,7 @@ const appRoutes: Routes = [
   { path: '**', component: PageNotFoundComponent },
 ];
 
-const routeOptions: ExtraOptions = {enableTracing: true};
+const routeOptions: ExtraOptions = {enableTracing: false};
 
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes, routeOptions)],
