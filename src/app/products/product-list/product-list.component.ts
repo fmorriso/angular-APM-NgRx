@@ -40,7 +40,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
 
     // subscribe to any changes to the 'products' portion/slice of the NgRx state
-    // TODO: Unsubscribe
     this.store.select('products').subscribe(
       products => {
         if (products) {
