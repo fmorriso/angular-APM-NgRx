@@ -5,40 +5,40 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './auth.service';
 
 @Component({
-	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss'],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-	pageTitle = 'Log In';
-	errorMessage: string;
+  pageTitle = 'Log In';
+  errorMessage: string;
 
-	maskUserName: boolean;
+  maskUserName: boolean;
 
-	constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
-	ngOnInit(): void {}
+  ngOnInit(): void { }
 
-	cancel(): void {
-		this.router.navigate(['welcome']);
-	}
+  cancel(): void {
+    this.router.navigate(['welcome']);
+  }
 
-	checkChanged(value: boolean): void {
-		this.maskUserName = value;
-	}
+  checkChanged(value: boolean): void {
+    this.maskUserName = value;
+  }
 
-	login(loginForm: NgForm): void {
-		if (loginForm && loginForm.valid) {
-			const userName = loginForm.form.value.userName;
-			const password = loginForm.form.value.password;
-			this.authService.login(userName, password);
+  login(loginForm: NgForm): void {
+    if (loginForm && loginForm.valid) {
+      const userName = loginForm.form.value.userName;
+      const password = loginForm.form.value.password;
+      this.authService.login(userName, password);
 
-			if (this.authService.redirectUrl) {
-				this.router.navigateByUrl(this.authService.redirectUrl);
-			} else {
-				this.router.navigate(['/products']);
-			}
-		} else {
-			this.errorMessage = 'Please enter a user name and password.';
-		}
-	}
+      if (this.authService.redirectUrl) {
+        this.router.navigateByUrl(this.authService.redirectUrl);
+      } else {
+        this.router.navigate(['/products']);
+      }
+    } else {
+      this.errorMessage = 'Please enter a user name and password.';
+    }
+  }
 }
