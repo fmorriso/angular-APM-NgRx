@@ -4,6 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthService } from './auth.service';
 
+/* NgRx */
+import { Store } from '@ngrx/store';
+
 @Component({
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -14,16 +17,26 @@ export class LoginComponent implements OnInit {
 
   maskUserName: boolean;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private store: Store<any>, private authService: AuthService, private router: Router) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    // TODO: Unsubscribe
+    this.store.select('users').subscribe(
+      users => {
+        if (users) {
+          this.maskUserName = users.maskUserName;
+        }
+      });
+  }
 
   cancel(): void {
     this.router.navigate(['welcome']);
   }
 
-  checkChanged(value: boolean): void {
-    this.maskUserName = value;
+  checkChanged(): void {
+    this.store.dispatch(
+      { type: '[User] Mask User Name' }
+    );
   }
 
   login(loginForm: NgForm): void {
