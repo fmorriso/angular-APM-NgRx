@@ -4,69 +4,65 @@ import { Subscription } from 'rxjs';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
-import { Store, select } from '@ngrx/store';
+/* NgRx */
+import { Store } from '@ngrx/store';
 
 @Component({
-	selector: 'pm-product-list',
-	templateUrl: './product-list.component.html',
-	styleUrls: ['./product-list.component.scss'],
+  selector: 'pm-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-	pageTitle = 'Products';
-	errorMessage: string;
+  pageTitle = 'Products';
+  errorMessage: string;
 
-	displayCode: boolean;
+  displayCode: boolean;
 
-	products: Product[];
+  products: Product[];
 
-	// Used to highlight the selected product in the list
-	selectedProduct: Product | null;
-	sub: Subscription;
+  // Used to highlight the selected product in the list
+  selectedProduct: Product | null;
+  sub: Subscription;
 
-	constructor(
-		private store: Store<any>,
-		private productService: ProductService
-	) {}
+  constructor(
+    private store: Store<any>,
+    private productService: ProductService
+  ) { }
 
-	ngOnInit(): void {
-		this.sub = this.productService.selectedProductChanges$.subscribe(
-			(selectedProduct) => (this.selectedProduct = selectedProduct)
-		);
+  ngOnInit(): void {
+    this.sub = this.productService.selectedProductChanges$.subscribe(
+      currentProduct => this.selectedProduct = currentProduct
+    );
 
-		this.productService.getProducts().subscribe({
-			next: (products: Product[]) => (this.products = products),
-			error: (err: any) => (this.errorMessage = err.error),
-		});
+    this.productService.getProducts().subscribe({
+      next: (products: Product[]) => this.products = products,
+      error: err => this.errorMessage = err
+    });
 
-		// subscribe to any changes to the 'products' portion/slice of the NgRx state
-		// TODO: Unsubscribe
-		this.store
-			.pipe(select('products'))
-			//
-			.subscribe((products) => {
-				if (products) {
-					this.displayCode = products.showProductCode;
-				}
-			});
-	}
+    // subscribe to any changes to the 'products' portion/slice of the NgRx state
+    this.store.select('products').subscribe(
+      products => {
+        if (products) {
+          this.displayCode = products.showProductCode;
+        }
+      });
+  }
 
-	ngOnDestroy(): void {
-		this.sub.unsubscribe();
-	}
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
 
-	checkChanged(value: boolean): void {
-		// this.displayCode = value;
-		this.store.dispatch({
-			type: 'TOGGLE_PRODUCT_CODE',
-			payload: value,
-		});
-	}
+  checkChanged(): void {
+    this.store.dispatch(
+      { type: '[Product] Toggle Product Code' }
+    );
+  }
 
-	newProduct(): void {
-		this.productService.changeSelectedProduct(this.productService.newProduct());
-	}
+  newProduct(): void {
+    this.productService.changeSelectedProduct(this.productService.newProduct());
+  }
 
-	productSelected(product: Product): void {
-		this.productService.changeSelectedProduct(product);
-	}
+  productSelected(product: Product): void {
+    this.productService.changeSelectedProduct(product);
+  }
 }
