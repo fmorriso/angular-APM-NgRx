@@ -22,7 +22,6 @@ import { UserModule } from './user/user.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule, StoreDevtoolsOptions } from '@ngrx/store-devtools';
 
-
 const ngrxDevToolOpts: StoreDevtoolsOptions = {
   name: 'APM with NgRx',
   maxAge: 25,
