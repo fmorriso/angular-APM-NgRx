@@ -1,18 +1,14 @@
-//
-import { initialState, ProductState } from './product.state';
+/* NgRx */
+import { createReducer, on, createAction } from '@ngrx/store';
 
-export function reducer(state = initialState, action): ProductState {
-	switch (action.type) {
-		//
-		case 'TOGGLE_PRODUCT_CODE':
-			// console.log('existing state: ' + JSON.stringify(state));
-			// console.log('payload: ' + JSON.stringify(action.payload));
-			return {
-				...state,
-				showProductCode: action.payload,
-			};
-		//
-		default:
-			return state;
-	}
-}
+export const productReducer = createReducer(
+  { showProductCode: true },
+  on(createAction('[Product] Toggle Product Code'), state => {
+    console.log('existing state: ' + JSON.stringify(state));
+    return {
+      ...state,
+      showProductCode: !state.showProductCode
+      // showProductCode: state.showProductCode = false,
+    };
+  })
+);

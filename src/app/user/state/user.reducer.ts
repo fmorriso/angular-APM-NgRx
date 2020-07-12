@@ -1,14 +1,11 @@
-import { initialState, UserState } from './user.state';
+import { createReducer, on, createAction } from '@ngrx/store';
 
-export function reducer(state = initialState, action): UserState {
-	switch (action.type) {
-		case 'MASK_USER_NAME':
-			return {
-				...state,
-				maskUserName: action.payload,
-			};
-
-		default:
-			return state;
-	}
-}
+export const userReducer = createReducer(
+  { maskUserName: true },
+  on(createAction('[User] Mask User Name'), state => {
+    return {
+      ...state,
+      maskUserName: !state.maskUserName
+    };
+  })
+);
