@@ -8,6 +8,7 @@ import { ProductService } from '../product.service';
 /* NgRx */
 import { Store } from '@ngrx/store';
 import { State } from '../state/product.state';
+import { getShowProductCode } from '../state/product.selectors';
 
 @Component({
   selector: 'pm-product-list',
@@ -41,9 +42,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
       error: err => this.errorMessage = err
     });
 
-    // subscribe to any changes to the 'products' portion/slice of the NgRx state
-    this.store.select('products').subscribe(
-      products => this.displayCode = products.showProductCode
+    // subscribe to any changes to the showProductCode portion of the 'products' portion/slice of the NgRx state
+    this.store.select(getShowProductCode).subscribe(
+      showProductCode => this.displayCode = showProductCode
     );
   }
 
