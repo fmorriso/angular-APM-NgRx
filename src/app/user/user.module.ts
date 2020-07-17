@@ -14,10 +14,13 @@ const userRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule,
+  imports: [
+    SharedModule,
     RouterModule.forChild(userRoutes),
     StoreModule.forFeature('users', userReducer)
   ],
-  declarations: [LoginComponent],
+  declarations: [
+    LoginComponent
+  ]
 })
 export class UserModule { }
