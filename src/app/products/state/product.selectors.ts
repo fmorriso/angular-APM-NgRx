@@ -1,8 +1,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ProductState } from './product.state';
 
-// showProductCode
+// define a slice of the big state that we want to deal with
 const getProductFeatureState = createFeatureSelector<ProductState>('products');
+
+// showProductCode
 export const getShowProductCode = createSelector(
   getProductFeatureState,
   (state) => state.showProductCode
