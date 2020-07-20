@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
@@ -13,7 +13,7 @@ import * as ProductActions from '../state/product.actions';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
 })
-export class ProductListComponent implements OnInit, OnDestroy {
+export class ProductListComponent implements OnInit {
   pageTitle = 'Products';
   errorMessage: string;
 
@@ -48,7 +48,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void { }
 
   checkChanged(): void {
     this.store.dispatch(ProductActions.toggleProductCode());
