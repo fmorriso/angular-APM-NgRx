@@ -1,4 +1,4 @@
 // Global NgRx state
 export interface State {
-	user: any;
+  user: any;
 }

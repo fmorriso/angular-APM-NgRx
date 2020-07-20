@@ -13,11 +13,11 @@ import { reducer } from './state/user.reducer';
 const userRoutes: Routes = [{ path: 'login', component: LoginComponent }];
 
 @NgModule({
-	imports: [
-		SharedModule,
-		RouterModule.forChild(userRoutes),
-		StoreModule.forFeature('users', reducer),
-	],
-	declarations: [LoginComponent],
+  imports: [
+    SharedModule,
+    RouterModule.forChild(userRoutes),
+    StoreModule.forFeature('users', reducer),
+  ],
+  declarations: [LoginComponent],
 })
 export class UserModule {}

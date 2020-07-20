@@ -1,11 +1,11 @@
 import { Component, VERSION as ANGULAR_VERSION } from '@angular/core';
 
 @Component({
-	templateUrl: './welcome.component.html',
+  templateUrl: './welcome.component.html',
 })
 export class WelcomeComponent {
-	public pageTitle = 'Welcome';
-	public get ngVersion(): string {
-		return ANGULAR_VERSION.full;
-	}
+  pageTitle = 'Welcome';
+  get ngVersion(): string {
+    return ANGULAR_VERSION.full;
+  }
 }
