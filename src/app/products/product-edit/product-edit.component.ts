@@ -16,7 +16,7 @@ import * as ProductActions from '../state/product.actions';
 @Component({
   selector: 'pm-product-edit',
   templateUrl: './product-edit.component.html',
-  styleUrls: ['./product-edit.component.scss'],
+  styleUrls: ['./product-edit.component.scss']
 })
 export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
@@ -87,40 +87,38 @@ export class ProductEditComponent implements OnInit {
   // Also validate on blur
   // Helpful if the user tabs through required fields
   blur(): void {
-    this.displayMessage = this.genericValidator.processMessages(
-      this.productForm
-    );
+    this.displayMessage = this.genericValidator.processMessages(this.productForm);
   }
 
   displayProduct(product: Product | null): void {
     // Set the local product property
     this.product = product;
 
-    if (this.product) {
+    if (product) {
       // Reset the form back to pristine
       this.productForm.reset();
 
       // Display the appropriate page title
-      if (this.product.id === 0) {
+      if (product.id === 0) {
         this.pageTitle = 'Add Product';
       } else {
-        this.pageTitle = `Edit Product: ${this.product.productName}`;
+        this.pageTitle = `Edit Product: ${product.productName}`;
       }
 
       // Update the data on the form
       this.productForm.patchValue({
-        productName: this.product.productName,
-        productCode: this.product.productCode,
-        starRating: this.product.starRating,
-        description: this.product.description
+        productName: product.productName,
+        productCode: product.productCode,
+        starRating: product.starRating,
+        description: product.description
       });
     }
   }
 
-  cancelEdit(): void {
+  cancelEdit(product: Product): void {
     // Redisplay the currently selected product
     // replacing any edits made
-    this.displayProduct(this.product);
+    this.displayProduct(product);
   }
 
   deleteProduct(product: Product): void {
@@ -129,7 +127,7 @@ export class ProductEditComponent implements OnInit {
         this.productService.deleteProduct(product.id).subscribe({
           next: () =>
             this.store.dispatch(ProductActions.clearCurrentProduct()),
-          error: (err) => (this.errorMessage = err.error),
+          error: err => this.errorMessage = err
         });
       }
     } else {
@@ -138,31 +136,26 @@ export class ProductEditComponent implements OnInit {
     }
   }
 
-  saveProduct(): void {
+  saveProduct(originalProduct: Product): void {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
         // Copy over all of the original product properties
         // Then copy over the values from the form
         // This ensures values not on the form, such as the Id, are retained
-        const p = { ...this.product, ...this.productForm.value };
+        const product: Product = { ...originalProduct, ...this.productForm.value };
 
-        if (p.id === 0) {
-          this.productService.createProduct(p).subscribe({
-            next: (product) =>
-              this.store.dispatch(
-                ProductActions.setCurrentProduct({ product })
-              ),
-            error: (err) => (this.errorMessage = err.error),
+        if (product.id === 0) {
+          this.productService.createProduct(product).subscribe({
+            next: p => this.store.dispatch(ProductActions.setCurrentProduct({ product: p })),
+            error: err => this.errorMessage = err
           });
         } else {
-          this.productService.updateProduct(p).subscribe({
-            next: (product) => ProductActions.setCurrentProduct({ product }),
-            error: (err) => (this.errorMessage = err.error),
+          this.productService.updateProduct(product).subscribe({
+            next: p => this.store.dispatch(ProductActions.setCurrentProduct({ product: p })),
+            error: err => this.errorMessage = err
           });
         }
       }
-    } else {
-      this.errorMessage = 'Please correct the validation errors.';
     }
   }
 }

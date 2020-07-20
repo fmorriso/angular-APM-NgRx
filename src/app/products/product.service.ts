@@ -13,7 +13,7 @@ export class ProductService {
   private productsUrl = 'api/products';
   private products: Product[];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
     if (this.products) {
@@ -23,8 +23,8 @@ export class ProductService {
       .pipe(
         tap(data => console.log(JSON.stringify(data))),
         tap(data => this.products = data),
-      catchError(this.handleError)
-    );
+        catchError(this.handleError)
+      );
   }
 
   createProduct(product: Product): Observable<Product> {
@@ -60,8 +60,7 @@ export class ProductService {
   updateProduct(product: Product): Observable<Product> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.productsUrl}/${product.id}`;
-    return this.http
-      .put<Product>(url, product, { headers })
+    return this.http.put<Product>(url, product, { headers })
       .pipe(
         tap(() => console.log('updateProduct: ' + product.id)),
         // Update the item in the list
