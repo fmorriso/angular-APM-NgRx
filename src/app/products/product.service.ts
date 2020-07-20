@@ -19,21 +19,22 @@ export class ProductService {
     if (this.products) {
       return of(this.products);
     }
-    return this.http.get<Product[]>(this.productsUrl).pipe(
-      tap((data) => console.log(JSON.stringify(data))),
-      tap((data) => (this.products = data)),
+    return this.http.get<Product[]>(this.productsUrl)
+      .pipe(
+        tap(data => console.log(JSON.stringify(data))),
+        tap(data => this.products = data),
       catchError(this.handleError)
     );
   }
 
   createProduct(product: Product): Observable<Product> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    product.id = null;
-    return this.http
-      .post<Product>(this.productsUrl, product, { headers })
+    // Product Id must be null for the Web API to assign an Id
+    const newProduct = { ...product, id: null };
+    return this.http.post<Product>(this.productsUrl, newProduct, { headers })
       .pipe(
-        tap((data) => console.log('createProduct: ' + JSON.stringify(data))),
-        tap((data) => {
+        tap(data => console.log('createProduct: ' + JSON.stringify(data))),
+        tap(data => {
           this.products.push(data);
         }),
         catchError(this.handleError)
@@ -43,12 +44,11 @@ export class ProductService {
   deleteProduct(id: number): Observable<{}> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.productsUrl}/${id}`;
-    return this.http
-      .delete<Product>(url, { headers })
+    return this.http.delete<Product>(url, { headers })
       .pipe(
-        tap((data) => console.log('deleteProduct: ' + id)),
-        tap((data) => {
-          const foundIndex = this.products.findIndex((item) => item.id === id);
+        tap(data => console.log('deleteProduct: ' + id)),
+        tap(data => {
+          const foundIndex = this.products.findIndex(item => item.id === id);
           if (foundIndex > -1) {
             this.products.splice(foundIndex, 1);
           }
@@ -68,9 +68,7 @@ export class ProductService {
         // This is required because the selected product that was edited
         // was a copy of the item from the array.
         tap(() => {
-          const foundIndex = this.products.findIndex(
-            (item) => item.id === product.id
-          );
+          const foundIndex = this.products.findIndex(item => item.id === product.id);
           if (foundIndex > -1) {
             this.products[foundIndex] = product;
           }
@@ -81,7 +79,7 @@ export class ProductService {
       );
   }
 
-  private handleError(err) {
+  private handleError(err: any) {
     // in a real world app, we may send the server to some remote logging infrastructure
     // instead of just logging it to the console
     let errorMessage: string;

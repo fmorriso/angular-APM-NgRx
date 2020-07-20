@@ -1,46 +1,44 @@
 // Product reducers
+import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
+//
 import { initialState, ProductState } from './product.state';
-import { ProductActions, ProductActionTypes } from './product.actions';
+import * as ProductActions from './product.actions';
 
-export function reducer(
-  state = initialState,
-  action: ProductActions
-): ProductState {
-  switch (action.type) {
-    //
-    case ProductActionTypes.ToggleProductCode:
-      // console.log('existing state: ' + JSON.stringify(state));
-      // console.log('payload: ' + JSON.stringify(action.payload));
-      return {
-        ...state,
-        showProductCode: action.payload,
-      };
+export const productReducer = createReducer<ProductState>(
+  initialState,
+  //
+  on(ProductActions.toggleProductCode, (state): ProductState => {
+    return {
+      ...state,
+      showProductCode: !state.showProductCode
+    };
+  }),
+  //
+  on(ProductActions.setCurrentProduct, (state, action): ProductState => {
+    return {
+      ...state,
+      currentProduct: action.product
+    };
+  }),
+  //
+  on(ProductActions.clearCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProduct: null
+    };
+  }),
+  //
+  on(ProductActions.initializeCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProduct: {
+        id: 0,
+        productName: '',
+        productCode: 'New',
+        description: '',
+        starRating: 0
+      }
+    };
+  })
 
-    case ProductActionTypes.SetCurrentProduct:
-      return {
-        ...state,
-        currentProduct: { ...action.payload },
-      };
-
-    case ProductActionTypes.ClearCurrentProduct:
-      return {
-        ...state,
-        currentProduct: null,
-      };
-
-    case ProductActionTypes.InitializeCurrentProduct:
-      return {
-        ...state,
-        currentProduct: {
-          id: 0,
-          productName: '',
-          productCode: 'New',
-          description: '',
-          starRating: 0,
-        },
-      };
-
-    default:
-      return state;
-  }
-}
+);

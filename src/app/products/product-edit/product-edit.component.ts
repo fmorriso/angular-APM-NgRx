@@ -8,9 +8,10 @@ import { NumberValidators } from '../../shared/number.validator';
 
 // NgRx
 import { Store, select } from '@ngrx/store';
-import * as fromProductState from '../state/product.state';
-import * as productSelectors from '../state/product.selectors';
-import * as productActions from '../state/product.actions';
+// import * as fromProductState from '../state/product.state';
+import { State } from '../state/product.state';
+import * as ProductSelectors from '../state/product.selectors';
+import * as ProductActions from '../state/product.actions';
 
 @Component({
   selector: 'pm-product-edit',
@@ -30,7 +31,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private genericValidator: GenericValidator;
 
   constructor(
-    private store: Store<fromProductState.State>,
+    private store: Store<State>,
     private fb: FormBuilder,
     private productService: ProductService
   ) {
@@ -40,14 +41,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       productName: {
         required: 'Product name is required.',
         minlength: 'Product name must be at least three characters.',
-        maxlength: 'Product name cannot exceed 50 characters.',
+        maxlength: 'Product name cannot exceed 50 characters.'
       },
       productCode: {
-        required: 'Product code is required.',
+        required: 'Product code is required.'
       },
       starRating: {
-        range: 'Rate the product between 1 (lowest) and 5 (highest).',
-      },
+        range: 'Rate the product between 1 (lowest) and 5 (highest).'
+      }
     };
 
     // Define an instance of the validator for use with this form,
@@ -68,25 +69,22 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       ],
       productCode: ['', Validators.required],
       starRating: ['', NumberValidators.range(1, 5)],
-      description: '',
+      description: ''
     });
 
     // Watch for changes to the currently selected product
     // TODO: Unsubscribe
-    this.store
-      .pipe(select(productSelectors.getCurrentProduct))
-      .subscribe((currentProduct) => this.displayProduct(currentProduct));
+    this.store.select(ProductSelectors.getCurrentProduct).subscribe(
+      currentProduct => this.displayProduct(currentProduct)
+    );
 
-    // Watch for value changes
+    // Watch for value changes for validation
     this.productForm.valueChanges.subscribe(
-      (value) =>
-        (this.displayMessage = this.genericValidator.processMessages(
-          this.productForm
-        ))
+      () => this.displayMessage = this.genericValidator.processMessages(this.productForm)
     );
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   // Also validate on blur
   // Helpful if the user tabs through required fields
@@ -116,7 +114,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         productName: this.product.productName,
         productCode: this.product.productCode,
         starRating: this.product.starRating,
-        description: this.product.description,
+        description: this.product.description
       });
     }
   }
@@ -132,13 +130,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       if (confirm(`Really delete the product: ${this.product.productName}?`)) {
         this.productService.deleteProduct(this.product.id).subscribe({
           next: () =>
-            this.store.dispatch(new productActions.ClearCurrentProduct()),
+            this.store.dispatch(ProductActions.clearCurrentProduct()),
           error: (err) => (this.errorMessage = err.error),
         });
       }
     } else {
       // No need to delete, it was never saved
-      this.store.dispatch(new productActions.ClearCurrentProduct());
+      this.store.dispatch(ProductActions.clearCurrentProduct());
     }
   }
 
@@ -154,13 +152,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           this.productService.createProduct(p).subscribe({
             next: (product) =>
               this.store.dispatch(
-                new productActions.SetCurrentProduct(product)
+                ProductActions.setCurrentProduct({ product })
               ),
             error: (err) => (this.errorMessage = err.error),
           });
         } else {
           this.productService.updateProduct(p).subscribe({
-            next: (product) => new productActions.SetCurrentProduct(product),
+            next: (product) => ProductActions.setCurrentProduct({ product }),
             error: (err) => (this.errorMessage = err.error),
           });
         }

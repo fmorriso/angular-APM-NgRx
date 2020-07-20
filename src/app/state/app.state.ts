@@ -1,4 +1,5 @@
-// Global NgRx state
+import { UserState } from '../user/state/user.state';
+
 export interface State {
-  user: any;
+  user: UserState;
 }
