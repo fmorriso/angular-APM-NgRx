@@ -18,7 +18,7 @@ import * as ProductActions from '../state/product.actions';
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.scss'],
 })
-export class ProductEditComponent implements OnInit, OnDestroy {
+export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
   errorMessage = '';
   productForm: FormGroup;
@@ -84,8 +84,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void { }
-
   // Also validate on blur
   // Helpful if the user tabs through required fields
   blur(): void {
@@ -125,10 +123,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.displayProduct(this.product);
   }
 
-  deleteProduct(): void {
-    if (this.product && this.product.id) {
-      if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-        this.productService.deleteProduct(this.product.id).subscribe({
+  deleteProduct(product: Product): void {
+    if (product && product.id) {
+      if (confirm(`Really delete the product: ${product.productName}?`)) {
+        this.productService.deleteProduct(product.id).subscribe({
           next: () =>
             this.store.dispatch(ProductActions.clearCurrentProduct()),
           error: (err) => (this.errorMessage = err.error),
