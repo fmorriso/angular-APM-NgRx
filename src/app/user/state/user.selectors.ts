@@ -6,10 +6,10 @@ const getUserFeatureState = createFeatureSelector<UserState>('users');
 
 export const getMaskUserName = createSelector(
   getUserFeatureState,
-  (state) => state.maskUserName
+  state => state.maskUserName
 );
 
 export const getCurrentUser = createSelector(
   getUserFeatureState,
-  (state) => state.currentUser
+  state => state.currentUser
 );

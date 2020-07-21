@@ -13,9 +13,8 @@ export class GenericValidator {
   //     validationRuleName1: 'Validation Message.',
   //     validationRuleName2: 'Validation Message.'
   // }
-  constructor(
-    private validationMessages: { [key: string]: { [key: string]: string } }
-  ) {}
+  constructor(private validationMessages: { [key: string]: { [key: string]: string } }) {
+  }
 
   // Processes each control within a FormGroup
   // And returns a set of validation messages to display
@@ -36,10 +35,9 @@ export class GenericValidator {
           if (this.validationMessages[controlKey]) {
             messages[controlKey] = '';
             if ((c.dirty || c.touched) && c.errors) {
-              Object.keys(c.errors).map((messageKey) => {
+              Object.keys(c.errors).map(messageKey => {
                 if (this.validationMessages[controlKey][messageKey]) {
-                  messages[controlKey] +=
-                    this.validationMessages[controlKey][messageKey] + ' ';
+                  messages[controlKey] += this.validationMessages[controlKey][messageKey] + ' ';
                 }
               });
             }

@@ -1,17 +1,16 @@
 // User reducer
+import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
+//
 import { initialState, UserState } from './user.state';
-import { UserActions, UserActionTypes } from './user.actions';
+import * as UserActions from './user.actions';
 
-export function reducer(state = initialState, action: UserActions): UserState {
-  switch (action.type) {
-    //
-    case UserActionTypes.MaskUserName:
-      return {
-        ...state,
-        maskUserName: action.payload,
-      };
 
-    default:
-      return state;
-  }
-}
+export const userReducer = createReducer<UserState>(
+  initialState,
+  on(UserActions.maskUserName, (state): UserState => {
+    return {
+      ...state,
+      maskUserName: !state.maskUserName
+    };
+  })
+);
