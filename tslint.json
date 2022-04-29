@@ -71,6 +71,8 @@
       "trace"
     ],
     "no-empty": false,
+		"no-conflicting-lifecycle": true,
+		"no-host-metadata-property": true,
     "no-inferrable-types": [
       true,
       "ignore-params"
